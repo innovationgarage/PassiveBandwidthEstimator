@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  h1:
+    hostname: h1
+    build: host
+    networks:
+      - net
+    cap_add:
+      - NET_ADMIN
+  h2:
+    hostname: h2
+    build: host
+    networks:
+      - net
+    cap_add:
+      - NET_ADMIN
+
+
+networks:
+  net:
+    driver: bridge
