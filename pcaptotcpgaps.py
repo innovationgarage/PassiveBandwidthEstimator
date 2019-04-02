@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import pcapfile.savefile
 import numpy
 import sys

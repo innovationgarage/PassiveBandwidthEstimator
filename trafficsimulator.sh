@@ -33,7 +33,7 @@ if [ "$ARG_help" ]; then
     cat <<EOF
 Usage:
 
-run.sh OPTIONS
+trafficsimulator.sh OPTIONS
 
   --client=./client.sh
   --server=./server.sh
