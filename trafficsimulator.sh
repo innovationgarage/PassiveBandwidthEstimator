@@ -1,14 +1,22 @@
 #! /bin/bash
 
-export ARG_client=client.sh
-export ARG_server=server.sh
+default () {
+    if ! [ "$(eval "echo \"\$$1\"")" ]; then
+        eval "export $1='$2'"
+    fi
+}
 
-export ARG_flows=5
-export ARG_ratelimit=10M
+default ARG_control ./control
 
-export ARG_netem="rate 100kbit"
+default ARG_client client.sh
+default ARG_server server.sh
 
-export ARG_time=60s
+default ARG_flows 5
+default ARG_ratelimit 10M
+
+default ARG_netem "rate 100kbit"
+
+default ARG_time 60s
 
 argparse() {
    export ARGS=()
@@ -42,6 +50,11 @@ trafficsimulator.sh OPTIONS
   --netem="$ARG_netem"
 
   --time=$ARG_time
+
+Any OPTIONS can also be given as environment variables with their
+names prefixed with ARG_, e.g.
+
+  export ARG_ratelimit=$ARG_ratelimit
 EOF
     exit 1
 fi
@@ -70,6 +83,6 @@ EOF
 
 chmod ugo+rx control/*/script*
 
-docker-compose up --abort-on-container-exit
+docker-compose -f trafficsimulator-compose.yml up --abort-on-container-exit
 
 mv control/h1/dumpfile* .
