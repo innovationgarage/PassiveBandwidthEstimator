@@ -70,8 +70,8 @@ EOF
 
 chmod ugo+rx control/*/script*
 
-docker-compose up # -d
+docker-compose up -d
 
-#sleep $ARG_time
+sleep $ARG_time
 
-#docker-compose down
+docker-compose down
