@@ -1,7 +1,8 @@
 import pcapfile.savefile
 import numpy
+import sys
 
-with open("data", "rb") as f:
+with open(sys.argv[1], "rb") as f:
     d = pcapfile.savefile.load_savefile(f, layers=3, verbose=True)
 
     packets = numpy.zeros(len(d.packets), dtype=[("timestamp", int),
@@ -20,7 +21,8 @@ with open("data", "rb") as f:
     streams = {}
     next_streamid = 0
 
-    for idx, packet in enumerate((packet for packet in d.packets if packet.packet.payload.p == 6)):            
+    for idx, packet in enumerate((packet for packet in d.packets
+                                  if packet.packet.type == 2048 and packet.packet.payload.p == 6)):            
         src = (packet.packet.payload.src,
                packet.packet.payload.payload.src_port)
         dst = (packet.packet.payload.dst,
@@ -44,4 +46,4 @@ with open("data", "rb") as f:
         packets[idx]["dst"] = packet.packet.payload.dst
         packets[idx]["dst_port"] = packet.packet.payload.payload.dst_port
         
-    numpy.savez_compressed("streams.npz", packets=packets[:idx+1])
+    numpy.savez_compressed(sys.argv[2], packets=packets[:idx+1])
