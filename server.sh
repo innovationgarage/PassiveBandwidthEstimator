@@ -7,7 +7,6 @@ for ((idx=0; idx < $ARG_flows; idx++)); do
     PID_NC[$idx]="$!"
 done
 
-while sleep 1; do
-    :
-done
- 
+# Do this twice to make sure the client exits first
+sleep $ARG_time
+sleep $ARG_time

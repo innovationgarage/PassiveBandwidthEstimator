@@ -14,7 +14,4 @@ for ((idx=0; idx < $ARG_flows; idx++)); do
     PID_NC[$idx]="$!"
 done
 
-while sleep 1; do
-    :
-done
- 
+sleep $ARG_time

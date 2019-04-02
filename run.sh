@@ -70,8 +70,6 @@ EOF
 
 chmod ugo+rx control/*/script*
 
-docker-compose up -d
+docker-compose up --abort-on-container-exit
 
-sleep $ARG_time
-
-docker-compose down
+mv control/h1/dumpfile* .
