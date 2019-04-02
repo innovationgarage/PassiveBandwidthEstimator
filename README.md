@@ -3,11 +3,11 @@ from Passive TCP Measurements using the Probe Gap
 Model](https://ieeexplore.ieee.org/document/8264826) in an open source
 passive bandwidth estimation tool.
 
-= Tools =
+## Tools
 
 * [Network link emulation](http://man7.org/linux/man-pages/man8/tc-netem.8.html)
 
-= Code =
+## Code
 
     docker exec -it bandwidthmeasure_h1_1 /bin/bash
       tc qdisc add dev eth0 root netem rate 100kbit
