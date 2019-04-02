@@ -6,6 +6,9 @@ RUN apt install -y net-tools
 RUN apt install -y iproute2
 RUN apt install -y iperf
 RUN apt install -y openssh-server
+RUN apt install -y pv
+RUN apt install -y netcat-openbsd
+RUN apt install -y tcpdump
 
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd

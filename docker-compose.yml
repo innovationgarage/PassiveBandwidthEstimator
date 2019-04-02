@@ -8,6 +8,8 @@ services:
       - net
     cap_add:
       - NET_ADMIN
+    volumes:
+      - ./control/h1:/control
   h2:
     hostname: h2
     build: host
@@ -15,8 +17,13 @@ services:
       - net
     cap_add:
       - NET_ADMIN
+    volumes:
+      - ./control/h2:/control
 
 
 networks:
   net:
-    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.100.0/24

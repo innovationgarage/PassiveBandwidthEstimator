@@ -21,3 +21,5 @@ passive bandwidth estimation tool.
     sudo apt install libpcap0.8-dev libpcap0.8
     # pip install pypcap
     pip install pypcapfile
+
+    pv --rate-limit 10M < /dev/zero > /dev/null

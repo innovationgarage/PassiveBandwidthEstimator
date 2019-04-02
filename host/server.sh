@@ -1,4 +1,5 @@
 #! /bin/bash
 
-exec /usr/sbin/sshd -D
+/control/script
+
 
