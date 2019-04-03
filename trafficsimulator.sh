@@ -8,6 +8,8 @@ default () {
 
 default ARG_control ./control
 
+default ARG_outdir .
+
 default ARG_client client.sh
 default ARG_server server.sh
 
@@ -51,6 +53,9 @@ trafficsimulator.sh OPTIONS
 
   --time=$ARG_time
 
+  --control=$ARG_control
+  --outdir=$ARG_outdir
+
 Any OPTIONS can also be given as environment variables with their
 names prefixed with ARG_, e.g.
 
@@ -58,6 +63,10 @@ names prefixed with ARG_, e.g.
 EOF
     exit 1
 fi
+
+echo "Settings:"
+export | grep ARG_
+echo
 
 mkdir -p control/{h1,h2}
 cp $ARG_client control/h1/script2
@@ -85,4 +94,5 @@ chmod ugo+rx control/*/script*
 
 docker-compose -f trafficsimulator-compose.yml up --abort-on-container-exit
 
-mv control/h1/dumpfile* .
+mkdir -p $ARG_outdir
+mv control/h1/dumpfile* $ARG_outdir
