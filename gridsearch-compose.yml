@@ -5,7 +5,7 @@ services:
     hostname: manager
     build: ./
     environment:
-      - CONTROL=./control
+      - ARG_control
     volumes:
-      - ./control:/app/control
+      - ARG_control:/app/control
       - /var/run/docker.sock:/var/run/docker.sock
