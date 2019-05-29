@@ -53,4 +53,4 @@ cat <<EOF
 10000,2,7500
 EOF
 } |
-  parallel -S "$CLUSTER_NODES" --line-buffer "cd '${ROOT}'; ./gridsearchtask.sh '${ARG_outdir}' {}"
+  parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "cd '${ROOT}'; ./gridsearchtask.sh '${ARG_outdir}' {}"
