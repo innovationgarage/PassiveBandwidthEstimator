@@ -34,7 +34,17 @@ Usage:
 
 gridsearch.sh OPTIONS
 
-  --outdir=${ARG_outdir}
+    --outdir=${ARG_outdir}
+
+    --flows-min=2
+    --flows-max=40
+    --link-min=100
+    --link-max=10000
+    --link-resolution=20
+
+    --flow-bw-spread=0.5
+    --flow-bw-resolution=10
+
 
 Any OPTIONS can also be given as environment variables with their
 names prefixed with ARG_, e.g.
@@ -46,11 +56,5 @@ fi
 
 ROOT="$(pwd)"
 
-{
-cat <<EOF
-10000,2,2500
-10000,2,4722
-10000,2,7500
-EOF
-} |
+./generategrid.py |
   parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "cd '${ROOT}'; ./gridsearchtask.sh '${ARG_outdir}' {}"
