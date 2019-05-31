@@ -1,11 +1,15 @@
 #! /bin/bash
 set -e
 
+source VERSION
+
 default () {
     if ! [ "$(eval "echo \"\$$1\"")" ]; then
         eval "export $1='$2'"
     fi
 }
+
+default ARG_name trafficsimulator
 
 default ARG_control ./control
 
@@ -57,6 +61,10 @@ trafficsimulator.sh OPTIONS
   --control=${ARG_control}
   --outdir=${ARG_outdir}
 
+  --repository=${ARG_repository}
+
+  --name=${ARG_name}
+
 Any OPTIONS can also be given as environment variables with their
 names prefixed with ARG_, e.g.
 
@@ -69,11 +77,11 @@ echo "Settings:"
 export | grep ARG_
 echo
 
-mkdir -p "${ARG_control}"/{h1,h2}
-cp $ARG_client "${ARG_control}/h1/script2"
-cp $ARG_server "${ARG_control}/h2/script2"
+mkdir -p "${ARG_control}"/{client,server}
+cp $ARG_client "${ARG_control}/client/script2"
+cp $ARG_server "${ARG_control}/server/script2"
 
-cat > "${ARG_control}/h1/script" <<EOF
+cat > "${ARG_control}/client/script" <<EOF
 #! /bin/bash
 set -x
 
@@ -82,7 +90,7 @@ $(export | grep ARG_)
 /control/script2
 EOF
 
-cat > "${ARG_control}/h2/script" <<EOF
+cat > "${ARG_control}/server/script" <<EOF
 #! /bin/bash
 set -x
 
@@ -93,7 +101,14 @@ EOF
 
 chmod ugo+rx "${ARG_control}"/*/script*
 
-docker-compose -f trafficsimulator-compose.yml up --abort-on-container-exit
+
+if [ "$(docker image ls -q "${ARG_repository}traffic-simulator:${VERSION}")" == "" ]; then
+  docker build --tag "${ARG_repository}traffic-simulator:${VERSION}" host
+fi
+
+docker-compose -p "${ARG_name}" -f trafficsimulator-compose.yml up --abort-on-container-exit
 
 mkdir -p "${ARG_outdir}"
-mv "${ARG_control}"/h1/dumpfile* "${ARG_outdir}"
+echo "${ARG_control}"/client/dumpfile*
+ls "${ARG_control}"/client/dumpfile*
+mv "${ARG_control}"/client/dumpfile* "${ARG_outdir}"

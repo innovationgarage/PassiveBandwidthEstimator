@@ -1,24 +1,24 @@
 version: '3'
 
 services:
-  h1:
-    hostname: h1
-    build: host
+  client:
+    hostname: client
+    image: ${ARG_repository}traffic-simulator:${VERSION}
     networks:
       - net
     cap_add:
       - NET_ADMIN
     volumes:
-      - ${ARG_control}/h1:/control
-  h2:
-    hostname: h2
-    build: host
+      - ${ARG_control}/client:/control
+  server:
+    hostname: server
+    image: ${ARG_repository}traffic-simulator:${VERSION}
     networks:
       - net
     cap_add:
       - NET_ADMIN
     volumes:
-      - ${ARG_control}/h2:/control
+      - ${ARG_control}/server:/control
 
 
 networks:

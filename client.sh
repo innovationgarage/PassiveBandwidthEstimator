@@ -9,7 +9,7 @@ PID_TCPDUMP="$!"
 for ((idx=0; idx < $ARG_flows; idx++)); do
     {
         pv --rate-limit $ARG_ratelimit < /dev/zero |
-            nc h2 $((1024+idx))
+            nc server $((1024+idx))
     } &
     PID_NC[$idx]="$!"
 done

@@ -1,13 +1,15 @@
 #! /bin/bash
 set -e
 
+source VERSION
+
 default () {
     if ! [ "$(eval "echo \"\$$1\"")" ]; then
         eval "export $1='$2'"
     fi
 }
 
-default ARG_outdir ../
+default ARG_outdir ..
 
 argparse() {
    export ARGS=()
@@ -45,6 +47,7 @@ gridsearch.sh OPTIONS
     --flow-bw-spread=0.5
     --flow-bw-resolution=10
 
+    --repository=${ARG_repository}
 
 Any OPTIONS can also be given as environment variables with their
 names prefixed with ARG_, e.g.
@@ -56,5 +59,10 @@ fi
 
 ROOT="$(pwd)"
 
+if [ "$(docker image ls -q "${ARG_repository}traffic-simulator:${VERSION}")" == "" ]; then
+  docker build --tag "${ARG_repository}traffic-simulator:${VERSION}" host
+  docker push "${ARG_repository}traffic-simulator:${VERSION}"
+fi
+
 ./generategrid.py |
-  parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "cd '${ROOT}'; ./gridsearchtask.sh '${ARG_outdir}' {}"
+  parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "cd '${ROOT}'; ./gridsearchtask.sh '${ARG_repository}' '${ARG_outdir}' {}"
