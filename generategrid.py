@@ -35,11 +35,16 @@ generategrid.py OPTIONS
     --flows-max=%(flows_max)s
 
     --link-min=%(link_min)s
+      Link minimum bandwidth is in kbit.
     --link-max=%(link_max)s
+      Link maximum bandwidth is in kbit.
     --link-resolution=%(link_resolution)s
+      Number of different link bandwidths to generate
 
     --flow-bw-spread=%(flow_bw_spread)s
+      Range of total flow bandwidth to generate. Fraction of link bandwidth: 0.5 means from 0.5*linkbw to 1.5*linkbw
     --flow-bw-resolution=%(flow_bw_resolution)s
+      Number of different flow bandwidths to generate.
 
     --stats
       Output stats rather than the actual grid
@@ -67,10 +72,9 @@ flows2, links2, flowbws2 = numpy.meshgrid(flows, links, flowbws)
 
 flowbws3 = links2 / flows2 * flowbws2
 
-if kwargs.get("integers", False):
-    flows2 = numpy.array(flows2, dtype=int)
-    links2 = numpy.array(links2, dtype=int)
-    flowbws3 = numpy.array(flowbws3, dtype=int)
+flows2 = numpy.array(flows2, dtype=int)
+links2 = numpy.array(links2, dtype=int)
+flowbws3 = numpy.array(flowbws3, dtype=int)
 
 if kwargs.get("stats"):
     print("Count:%s\nFlows: %s\nLinks: %s" % (flowbws2.shape[0]*flowbws2.shape[1]*flowbws2.shape[2], flows, links))

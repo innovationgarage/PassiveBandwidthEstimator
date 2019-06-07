@@ -9,7 +9,8 @@ default () {
     fi
 }
 
-default ARG_outdir ..
+default ARG_outdir ../pgaps
+default ARG_indir ../data
 
 argparse() {
    export ARGS=()
@@ -34,22 +35,10 @@ if [ "$ARG_help" ]; then
     cat <<EOF
 Usage:
 
-gridsearch.sh OPTIONS
+gridpcaptotcpgaps.sh OPTIONS
 
+    --indir=${ARG_indir}
     --outdir=${ARG_outdir}
-    --repository=${ARG_repository}
-
-    All options accepted by generategrid.py, e.g.:
-
-    --flows-min=2
-    --flows-max=40
-    --link-min=100
-    --link-max=10000
-    --link-resolution=20
-
-    --flow-bw-spread=0.5
-    --flow-bw-resolution=10
-
 
 Any OPTIONS can also be given as environment variables with their
 names prefixed with ARG_, e.g.
@@ -61,10 +50,5 @@ fi
 
 ROOT="$(pwd)"
 
-if [ "$(docker image ls -q "${ARG_repository}traffic-simulator:${VERSION}")" == "" ]; then
-  docker build --tag "${ARG_repository}traffic-simulator:${VERSION}" host
-  docker push "${ARG_repository}traffic-simulator:${VERSION}"
-fi
-
-./generategrid.py |
-  parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "cd '${ROOT}'; ./gridsearchtask.sh '${ARG_repository}' '${ARG_outdir}' {}"
+( cd ${ARG_indir}; find . -type f; ) |
+  parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "set -x; cd '$ROOT'; source env/bin/activate; mkdir -p '${ARG_outdir}/{//}'; ./pcaptotcpgaps.py '${ARG_indir}/{}' '${ARG_outdir}/{}.npz'"
