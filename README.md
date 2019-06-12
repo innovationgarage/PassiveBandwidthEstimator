@@ -1,19 +1,40 @@
+# About
 Goal: To implement the algorithm in [Available Bandwidth Estimation
 from Passive TCP Measurements using the Probe Gap
 Model](https://ieeexplore.ieee.org/document/8264826) in an open source
 passive bandwidth estimation tool.
 
-## Tools
+Some vocabulary for the paper:
+* TCP - Protocol with guaranteed delivery & ordering of packets, acks and resends if necessary
+* UDP - Protocol where packets are just  sent without checking if they are received
+* OWD - One Way Delay
+* CWND - Amount of data that a TCP sender can send before waiting for an ACK
+* RWND - Upper limit of CWND, set by the receiver based on its buffer size
+* Cross traffic - traffic not directly measured, on the same link as the measured traffic
+
+Notations in the paper:
+* C - Bandwidth of the tight link
+* λ - cross traffic bandwidth
+* A = Available bandwidth left, A = C − λ
+* l = packet size
+* g_in = time between sending two consecutive packets
+* g_out = time between receiving two consecutive packets
+* r_in = bandwidth of packages sent
+* r_out = bandwidth of packages received
+* t_in^k = time of sending of the k:th package
+* t_out^k = time of receiving of the k:th package
+
+# Tools
 
 * [Network link emulation](http://man7.org/linux/man-pages/man8/tc-netem.8.html)
 
-## Code
+# Code
 
 This repository currently contains a set of tools to investigate
 network behaviour over bandwidth limited links by simulating links
 between docker containers:
 
-# trafficsimulator.sh
+## trafficsimulator.sh
 
 This script sets up two docker containers connected by a network link,
 runs tc-netem on this link, rate limiting it and then runs a number of
@@ -32,7 +53,7 @@ network, all while dumping packets sent and received using tcpdump.
 
 The output is placed in the file "dumpfile".
 
-# pcaptotcpgaps.py
+## pcaptotcpgaps.py
 
 This script reads a tcpdump / libpcap savefile and produces an numpy
 npz file containing time, src ip/port, dst ip/port, ack, acknum and
@@ -41,7 +62,7 @@ integer assigned to each src/dst ip/port pairs.
 
     ./pcaptotcpgaps.py dumpfile gaps.npz
 
-# Cluster tools
+## Cluster tools
 
 The above scripts can be run over a range of parameters, possibly
 parallelized over a cluster of machines using GNU parallel. This repo
@@ -63,7 +84,7 @@ This helps funding further development; AND IT WON'T COST YOU A CENT.
 If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
 
 
-## gridsearch.sh
+### gridsearch.sh
 
 This script runs trafficsimulator.sh multiple times with different
 parameters, possibly on a cluster of machines.
@@ -91,7 +112,7 @@ parameters, possibly on a cluster of machines.
 The output tcpdump dumpfiles will be placed in subdirectories of
 outdir named "linkbw,flows,flowbw".
 
-## gridpcaptotcpgaps.sh
+### gridpcaptotcpgaps.sh
 
 Convert a directory tree of tcpdump dumpfiles to an equally structured
 directory tree of numpy npz files using pcaptotcpgaps.py.
