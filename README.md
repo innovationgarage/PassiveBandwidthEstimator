@@ -88,6 +88,9 @@ parameters, possibly on a cluster of machines.
       --flow-bw-resolution=10
         Number of different flow bandwidths to generate.
 
+The output tcpdump dumpfiles will be placed in subdirectories of
+outdir named "linkbw,flows,flowbw".
+
 ## gridpcaptotcpgaps.sh
 
 Convert a directory tree of tcpdump dumpfiles to an equally structured
