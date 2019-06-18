@@ -23,7 +23,7 @@ default ARG_ratelimit 10M
 
 default ARG_netem "rate 100kbit"
 
-default ARG_time 120s
+default ARG_time 300s
 
 argparse() {
    export ARGS=()

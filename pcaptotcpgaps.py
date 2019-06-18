@@ -3,13 +3,22 @@
 import pcapfile.savefile
 import numpy
 import sys
+import re
+
+local = None
+if len(sys.argv) > 3:
+    with open(sys.argv[3]) as f:
+        interfaces = {item[1]: dict(re.findall(r"([a-zA-Z][a-zA-Z ]*)  *([0-9.]*)", item[2], re.M))
+                      for item in re.findall(r"(^|\n)([^: \n]*): ((..*\n)*)\n", f.read(), re.M)}
+        del interfaces["lo"]
+        local = next(iter(interfaces.values()))
 
 with open(sys.argv[1], "rb") as f:
     d = pcapfile.savefile.load_savefile(f, layers=3, verbose=True)
 
     packets = numpy.zeros(len(d.packets), dtype=[("timestamp", int),
                                                  ("stream", int),
-                                                 ("direction", bool),
+                                                 ("sent", bool),
                                                  ("seqnum", int),
 
                                                  ("ack", bool),
@@ -35,11 +44,14 @@ with open(sys.argv[1], "rb") as f:
             streams[streamname] = next_streamid
             next_streamid += 1
         streamid = streams[streamname]
-        direction = src == streamname[0]
+        if local is not None:
+            sent = src == local
+        else:
+            sent = src == streamname[0]
         
         packets[idx]["timestamp"] = packet.timestamp
         packets[idx]["stream"] = streamid
-        packets[idx]["direction"] = direction
+        packets[idx]["sent"] = sent
         packets[idx]["seqnum"] = packet.packet.payload.payload.seqnum
         packets[idx]["ack"] = packet.packet.payload.payload.ack
         packets[idx]["acknum"] = packet.packet.payload.payload.acknum

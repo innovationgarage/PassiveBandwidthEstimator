@@ -52,5 +52,5 @@ ROOT="$(pwd)"
 
 echo "${ROOT}: ${ARG_indir} -> ${ARG_outdir}"
 
-( cd ${ARG_indir}; find . -type f; ) |
-  parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "set -x; echo '{}'; cd '$ROOT'; source env/bin/activate; mkdir -p '${ARG_outdir}/{//}'; ./pcaptotcpgaps.py '${ARG_indir}/{}' '${ARG_outdir}/{}.npz'"
+( cd ${ARG_indir}; find . -type f -name "dumpfile*" ; ) |
+  parallel --will-cite -S "$CLUSTER_NODES" --line-buffer "set -x; echo '{}'; cd '$ROOT'; source env/bin/activate; mkdir -p '${ARG_outdir}/{//}'; ./pcaptotcpgaps.py '${ARG_indir}/{}' '${ARG_outdir}/{}.npz' '${ARG_indir}/{//}/interfaces'"

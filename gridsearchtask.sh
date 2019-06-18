@@ -16,7 +16,7 @@ FLOWBW="$(echo "$3" | sed -e "s+\([0-9.]*\),\([0-9.]*\),\([0-9.]*\)+\3+g")"
 CONTROL="${ROOT}/control/$(hostname)-${LINKBW},${FLOWS},${FLOWBW}"
 OUTDIR="$ROOT/data/${DIRPREFIX}/${LINKBW},${FLOWS},${FLOWBW}"
 
-ARGS="--name=\"ts_${NAME}\" --control=\"${CONTROL}\" --ratelimit={FLOWBW}k --flows=${FLOWS} --netem=\"rate ${LINKBW}kbit\" --outdir=\"${OUTDIR}\""
+ARGS="--name=\"ts_${NAME}\" --control=\"${CONTROL}\" --ratelimit=${FLOWBW}k --flows=${FLOWS} --netem=\"rate ${LINKBW}kbit\" --outdir=\"${OUTDIR}\""
 
 echo "GRIDSEARCH STEP @ $(hostname): ./trafficsimulator.sh $ARGS"
 
