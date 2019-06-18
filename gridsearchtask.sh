@@ -4,8 +4,19 @@ source VERSION
 
 REPOSITORY="$1"
 ROOT="$2"
+
 NAME="$(echo "$3" | tr ",." "__")"
-ARGS="$(echo "$3" | sed -e "s+\([0-9.]*\),\([0-9.]*\),\([0-9.]*\)+--name=\"ts_${NAME}\" --control=\"$ROOT/control/$(hostname)-\1,\2,\3\" --ratelimit=\1k --flows=\2 --netem=\"rate \3kbit\" --outdir=\"$ROOT/data/\1,\2,\3\"+g")"
+
+DIRPREFIX="$(echo "$3" | sed -e "s+,++g" -e "s+\(.\)+\1/+g" -e "s+/$++g")"
+
+LINKBW="$(echo "$3" | sed -e "s+\([0-9.]*\),\([0-9.]*\),\([0-9.]*\)+\1+g")"
+FLOWS="$(echo "$3" | sed -e "s+\([0-9.]*\),\([0-9.]*\),\([0-9.]*\)+\2+g")"
+FLOWBW="$(echo "$3" | sed -e "s+\([0-9.]*\),\([0-9.]*\),\([0-9.]*\)+\3+g")"
+
+CONTROL="${ROOT}/control/$(hostname)-${LINKBW},${FLOWS},${FLOWBW}"
+OUTDIR="$ROOT/data/${DIRPREFIX}/${LINKBW},${FLOWS},${FLOWBW}"
+
+ARGS="--name=\"ts_${NAME}\" --control=\"${CONTROL}\" --ratelimit={FLOWBW}k --flows=${FLOWS} --netem=\"rate ${LINKBW}kbit\" --outdir=\"${OUTDIR}\""
 
 echo "GRIDSEARCH STEP @ $(hostname): ./trafficsimulator.sh $ARGS"
 
@@ -18,4 +29,5 @@ docker container prune -f
 
 eval "./trafficsimulator.sh --repository='${REPOSITORY}' $ARGS"
 
+rm -rf "${CONTROL}"
 echo "GRIDSEARCH STEP DONE @ $(hostname): ./trafficsimulator.sh $ARGS"

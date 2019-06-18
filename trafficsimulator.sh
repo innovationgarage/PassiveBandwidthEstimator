@@ -109,6 +109,8 @@ fi
 docker-compose -p "${ARG_name}" -f trafficsimulator-compose.yml up --abort-on-container-exit
 
 mkdir -p "${ARG_outdir}"
-echo "${ARG_control}"/client/dumpfile*
-ls "${ARG_control}"/client/dumpfile*
+
+ls "${ARG_control}"/client/dumpfile* "${ARG_control}"/client/interfaces
+
+mv "${ARG_control}"/client/interfaces "${ARG_outdir}"
 mv "${ARG_control}"/client/dumpfile* "${ARG_outdir}"

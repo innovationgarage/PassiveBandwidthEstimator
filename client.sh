@@ -3,6 +3,8 @@ set -x
 
 tc qdisc add dev eth0 root netem $ARG_netem
 
+ifconfig > /control/interfaces
+
 tcpdump -i eth0 -w /control/dumpfile -C 10 &
 PID_TCPDUMP="$!"
 
