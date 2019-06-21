@@ -16,7 +16,7 @@ if len(sys.argv) > 3:
 with open(sys.argv[1], "rb") as f:
     d = pcapfile.savefile.load_savefile(f, layers=3, verbose=True)
 
-    packets = numpy.zeros(len(d.packets), dtype=[("timestamp", int),
+    packets = numpy.zeros(len(d.packets), dtype=[("timestamp", "i8"),
                                                  ("stream", int),
                                                  ("sent", bool),
                                                  ("seqnum", int),
@@ -50,7 +50,7 @@ with open(sys.argv[1], "rb") as f:
         else:
             sent = src == streamname[0]
         
-        packets[idx]["timestamp"] = packet.timestamp
+        packets[idx]["timestamp"] = packet.timestamp * 1e6 + packet.timestamp_us
         packets[idx]["stream"] = streamid
         packets[idx]["sent"] = sent
         packets[idx]["seqnum"] = packet.packet.payload.payload.seqnum
