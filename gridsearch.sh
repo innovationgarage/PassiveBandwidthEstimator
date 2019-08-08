@@ -43,13 +43,25 @@ gridsearch.sh OPTIONS
 
     --flows-min=2
     --flows-max=40
+
     --link-min=100
+      Link minimum bandwidth is in kbit.
     --link-max=10000
+      Link maximum bandwidth is in kbit.
     --link-resolution=20
+      Number of different link bandwidths to generate
 
-    --flow-bw-spread=0.5
+    --flow-bw-min=0.5
+    --flow-bw-max=1.5
+      Range of cross traffic flow bandwidth to generate. Fraction of link bandwidth: 0.5 means 0.5*linkbw
     --flow-bw-resolution=10
+      Number of different cross traffic flow bandwidths to generate.
 
+    --flow-bw0-min=0.5
+    --flow-bw0-max=1.5
+      Range of flow bandwidth to generate. Fraction of link bandwidth: 0.5 means from 0.5*linkbw
+    --flow-bw0-resolution=10
+      Number of different flow bandwidths to generate.
 
 Any OPTIONS can also be given as environment variables with their
 names prefixed with ARG_, e.g.

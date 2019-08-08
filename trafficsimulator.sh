@@ -19,6 +19,7 @@ default ARG_client client.sh
 default ARG_server server.sh
 
 default ARG_flows 5
+default ARG_ratelimit0 10M
 default ARG_ratelimit 10M
 
 default ARG_netem "rate 100kbit"
@@ -54,6 +55,7 @@ trafficsimulator.sh OPTIONS
   --server=${ARG_server}
   --flows=${ARG_flows}
   --ratelimit=${ARG_ratelimit}
+  --ratelimit0=${ARG_ratelimit0}
   --netem="${ARG_netem}"
 
   --time=${ARG_time}
