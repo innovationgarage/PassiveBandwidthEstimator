@@ -14,7 +14,9 @@ read LINKBW FLOWS FLOWBW FLOWBW0 < <(echo "$3" | tr "," " ")
 CONTROL="${ROOT}/control/$(hostname)-${LINKBW},${FLOWS},${FLOWBW},${FLOWBW0}"
 OUTDIR="$ROOT/data/${DIRPREFIX}/${LINKBW},${FLOWS},${FLOWBW},${FLOWBW0}"
 
-ARGS="--name=\"ts_${NAME}\" --control=\"${CONTROL}\" --ratelimit0=${FLOWBW0}k --ratelimit=${FLOWBW}k --flows=${FLOWS} --netem=\"rate ${LINKBW}kbit\" --outdir=\"${OUTDIR}\""
+LINKBWKBIT=$((LINKBW * 8))
+
+ARGS="--name=\"ts_${NAME}\" --control=\"${CONTROL}\" --ratelimit0=${FLOWBW0}k --ratelimit=${FLOWBW}k --flows=${FLOWS} --netem=\"rate ${LINKBWKBIT}kbit\" --outdir=\"${OUTDIR}\""
 
 echo "GRIDSEARCH STEP @ $(hostname): ./trafficsimulator.sh $ARGS"
 
